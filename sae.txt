@@ -1,0 +1,155 @@
+import gc
+
+import keras
+import pandas as pd
+import numpy as np
+import tensorflow as tf
+from tensorflow import keras
+from keras.layers import Input,Dense,BatchNormalization,Embedding
+from sklearn import preprocessing
+import keras.backend as K
+import matplotlib.pyplot as plt
+def createDataFrame():
+    catColumns = ['Gender','BirthPlace']
+    binColumns = ['HasChildren', 'PlayGames', 'LovesSports']
+    numColumns = ['Age']
+    data={
+        'Name':['Ali Özcan','Emir','Faik','Mehmet','Gülden','Uğur','Eray','Ömer','Ali','Eda','Sami','Nebiyye','Güler'],
+        'Age':[65,12,39,45,39,36,24,10,10,26,60,65,60],
+        'Gender':['M','M','M','M','F','M','M','M','M','F','M','F','F'],
+        'HasChildren':[1,0,1,1,1,1,0,0,0,0,1,1,1],
+        'PlayGames':[0,1,1,1,1,0,1,1,1,1,0,1,0],
+        'LovesSports':[0,1,1,1,0,1,1,1,1,1,0,0,0],
+        'BirthPlace':['Kastamonu','İstanbul','Kastamonu','Kastamonu','Ordu','Kastamonu','Karabük','İstanbul','İstanbul','Karabük','Kastamonu'
+                      ,'Kastamonu','Kastamonu']
+    }
+    df=pd.DataFrame().from_dict(data)
+    return df,catColumns,binColumns,numColumns
+
+def createModel(n_contFeatures:int,n_binFeatures:int, catFeatProps:[{}],latentDim:int,neuronsForClassifier=[],neuronsForEncoder=[]):
+    continous_input = Input(shape=(n_contFeatures,), name='continous_input')
+    binary_input = Input(shape=(n_binFeatures,), name='binary_input')
+    catCount=0
+    catInputs = []
+    embeddings=[]
+    catLength=0;
+    for s in catFeatProps:
+        catCount=catCount+1
+        inp=keras.Input(shape=(1,), name='cat' + str(catCount) + '_input')
+        emb = Embedding(input_dim=s['UniqueCount'], output_dim=s['EmbeddingSize'])(inp)
+        #emb=keras.layers.Reshape(target_shape=(s['EmbeddingSize'],))(emb)
+        catInputs.append(inp)
+        embeddings.append(emb)
+    embedding_concatenated =keras.layers.Concatenate()(embeddings)
+    out = keras.layers.Flatten()(embedding_concatenated)
+    merged = keras.layers.Concatenate()([continous_input,binary_input,out])
+
+    counter=0
+    x=merged
+    # Iteratively add the hidden layers
+    for n_neurons in neuronsForEncoder:
+        counter = counter + 1
+        x = tf.keras.layers.Dense(n_neurons,'relu')(x)
+        if (counter == 1):
+            x = tf.keras.layers.BatchNormalization()(x)
+    zLatentLayer = Dense(latentDim,'linear', name="z_Latent")(x)
+
+    counter=0
+    c=zLatentLayer
+    for n_neurons in neuronsForClassifier:
+        counter = counter + 1
+        c = tf.keras.layers.Dense(n_neurons,'relu')(c)
+        if (counter == 1):
+            c = tf.keras.layers.Dropout(0.10)(c)
+    clsOut = Dense(1, activation='sigmoid',name='classifier_out')(c)
+
+    d=zLatentLayer
+    counter = 0
+    for n_neurons in reversed(neuronsForEncoder):
+        counter = counter + 1
+        d = tf.keras.layers.Dense(n_neurons,'relu')(d)
+        if (counter == 1):
+            d = tf.keras.layers.BatchNormalization()(d)
+    numOut = Dense(n_contFeatures, 'relu',name='decoder_numOut')(d)
+    binOut = Dense(n_binFeatures, 'sigmoid',name='decoder_binaryOut')(d)
+    catOut = Dense(catCount, 'relu',name='decoder_catOut')(d)
+
+
+    aeModel=keras.Model([continous_input]+[binary_input]+catInputs,[numOut,binOut,catOut,clsOut,zLatentLayer],name='ae')
+    aeModel.compile(optimizer=keras.optimizers.Adam(0.01),
+                   loss={'decoder_numOut':'mse',
+                         'decoder_binaryOut':'binary_crossentropy',
+                         'decoder_catOut':'mse',
+                         'classifier_out':'binary_crossentropy'},
+                    metrics={'classifier_out': ['accuracy']})
+    return aeModel;
+
+
+if __name__ == '__main__':
+    df,catColumns,binaryCols,numColumns=createDataFrame()
+    gc.collect()
+
+    embeddingInputs= []
+    catData=[]
+    for col in catColumns:
+        le1 = preprocessing.LabelEncoder()
+        uniqueData=df[col].unique()
+        le1.fit(uniqueData)
+        df[col]=le1.transform(df[col])
+        no_of_unique = len(uniqueData)
+        embedding_size =int(np.sqrt(np.sqrt(no_of_unique)))
+        embeddingInputs.append({'EmbeddingSize':embedding_size,'UniqueCount':no_of_unique})
+    for col in numColumns:
+        scaler=preprocessing.MinMaxScaler(feature_range=[0,1])
+        df[col]=scaler.fit_transform(df[col].values.reshape(-1,1))
+    latentDim=2
+    neuronsForClassifier=[16]
+    neuronsForEncoder=[16,8]
+    model=createModel(len(numColumns), len(binaryCols),embeddingInputs,latentDim,neuronsForClassifier,neuronsForEncoder)
+    # tf.keras.utils.plot_model(
+    #     model,
+    #     to_file="model.png",
+    #     show_shapes=True,
+    #     show_dtype=False,
+    #     show_layer_names=True,
+    #     rankdir="TB",
+    #     expand_nested=True,
+    #     dpi=96,
+    #     layer_range=None,
+    #     show_layer_activations=True,
+    # )
+    model.summary()
+    yLabels=  np.array(df['LovesSports'].values)
+    print(df)
+    history = model.fit(
+        [
+            np.array(df[numColumns].values),
+            np.array(df[binaryCols].values),
+            np.array(df[catColumns[0]].values),
+            np.array(df[catColumns[1]].values)
+
+        ],
+       y={
+            'decoder_numOut':np.array(df[numColumns].values),
+            'decoder_binaryOut':np.array(df[binaryCols].values),
+            'decoder_catOut':np.array(df[catColumns].values),
+            'classifier_out':yLabels
+       },
+        batch_size=5,
+        epochs=20,
+        verbose=1,
+    );
+    np.set_printoptions(suppress=True)
+    pred=model.predict([df[numColumns],df[binaryCols],df[catColumns[0]],df[catColumns[1]]])
+    print(pred[4])
+    plt.scatter(pred[4][:,:1], pred[4][:,1:2], c=yLabels)
+    plt.show()
+    # print(pred[2][0])
+    # dfPrediction = pd.DataFrame(data=None, columns=['Gender','BirthPlace','LoveSports'],index=df.index.copy())
+    # dfPrediction['Gender']=pred[3][:,:1]
+    # dfPrediction['BirthPlace']=pred[3][:,1:2]
+    # dfPrediction['LoveSports']=pred[4]
+    pd.set_option('display.max_columns', 100)  # or 1000
+    pd.set_option('display.max_rows', 150)  # or 1000
+    pd.set_option('display.max_colwidth', 100)  # or 199
+    #print(pd.concat((df,dfPrediction),ignore_index=True,axis=1))
