@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-03-18T13:02:19.704Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.50" etag="ayHkwjkLfcCckg_Am6nT" version="20.8.20" type="github">
+<mxfile host="app.diagrams.net" modified="2023-03-18T13:04:04.415Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.50" etag="-NlPL0cj_JUMzNOwybPP" version="20.8.20" type="github">
   <diagram name="Sayfa -1" id="cIQKz1XCp5XG0GQdo2Qt">
     <mxGraphModel dx="1231" dy="544" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="583" math="0" shadow="0">
       <root>
@@ -29,13 +29,13 @@
         <mxCell id="u5VWQQk_WGxK5T5D0fq5-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Tahoma;fontSize=8;fillColor=#FFFFFF;strokeColor=#000000;" edge="1" parent="1" source="u5VWQQk_WGxK5T5D0fq5-6" target="u5VWQQk_WGxK5T5D0fq5-33">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="u5VWQQk_WGxK5T5D0fq5-6" value="&lt;font face=&quot;arial&quot;&gt;Dense-[100-relu]&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=1;fontSize=10;fillColor=#FFF2CC;strokeColor=#999999;horizontal=0;fontFamily=Tahoma;" vertex="1" parent="1">
+        <mxCell id="u5VWQQk_WGxK5T5D0fq5-6" value="&lt;font face=&quot;arial&quot;&gt;Dense- [ 100-relu ]&amp;nbsp;&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=1;fontSize=10;fillColor=#FFF2CC;strokeColor=#999999;horizontal=0;fontFamily=Tahoma;" vertex="1" parent="1">
           <mxGeometry x="368" y="128.51893617021275" width="32" height="184.9685106382979" as="geometry" />
         </mxCell>
         <mxCell id="u5VWQQk_WGxK5T5D0fq5-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=arial;fontSize=8;fillColor=#FFFFFF;strokeColor=#000000;" edge="1" parent="1" source="u5VWQQk_WGxK5T5D0fq5-8" target="u5VWQQk_WGxK5T5D0fq5-37">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="u5VWQQk_WGxK5T5D0fq5-8" value="&lt;font face=&quot;arial&quot;&gt;&amp;nbsp;Dense [64-relu]&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=1;fontSize=10;fillColor=#FFF2CC;strokeColor=#999999;horizontal=0;fontFamily=Tahoma;" vertex="1" parent="1">
+        <mxCell id="u5VWQQk_WGxK5T5D0fq5-8" value="&lt;font face=&quot;arial&quot;&gt;&amp;nbsp;Dense&amp;nbsp; [ 64-relu ]&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=1;fontSize=10;fillColor=#FFF2CC;strokeColor=#999999;horizontal=0;fontFamily=Tahoma;" vertex="1" parent="1">
           <mxGeometry x="506" y="149.69" width="32" height="143.31" as="geometry" />
         </mxCell>
         <mxCell id="u5VWQQk_WGxK5T5D0fq5-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Tahoma;fontSize=8;" edge="1" parent="1" source="u5VWQQk_WGxK5T5D0fq5-12" target="u5VWQQk_WGxK5T5D0fq5-6">
@@ -89,7 +89,7 @@
             <mxPoint x="612.75" y="220.92000000000004" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="u5VWQQk_WGxK5T5D0fq5-37" value="&lt;font face=&quot;arial&quot;&gt;&amp;nbsp;Dense [32-relu]&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=1;fontSize=10;fillColor=#FFF2CC;strokeColor=#999999;horizontal=0;fontFamily=Tahoma;" vertex="1" parent="1">
+        <mxCell id="u5VWQQk_WGxK5T5D0fq5-37" value="&lt;font face=&quot;arial&quot;&gt;&amp;nbsp;Dense&amp;nbsp; [ 32-relu ]&lt;/font&gt;" style="whiteSpace=wrap;html=1;shadow=1;fontSize=10;fillColor=#FFF2CC;strokeColor=#999999;horizontal=0;fontFamily=Tahoma;" vertex="1" parent="1">
           <mxGeometry x="559" y="162.69000000000003" width="32" height="117.91" as="geometry" />
         </mxCell>
         <mxCell id="u5VWQQk_WGxK5T5D0fq5-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Courier New;" edge="1" parent="1" source="u5VWQQk_WGxK5T5D0fq5-39" target="u5VWQQk_WGxK5T5D0fq5-30">
